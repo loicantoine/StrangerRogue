@@ -1,3 +1,8 @@
 Stranger Rogue/Temp/UnityLockfile
 Stranger Rogue/Temp/*
+Stranger Rogue/Library/
 Stranger Rogue/Library/*
+Stranger Rogue/Library/metadata/00/*
+Stranger Rogue/Library/metadata/00/00000000000000005000000000000000
+*.info
+*.suo
