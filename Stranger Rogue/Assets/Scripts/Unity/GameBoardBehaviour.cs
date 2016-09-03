@@ -61,6 +61,11 @@ public class GameBoardBehaviour : MonoBehaviour
 
           obj.transform.parent = transform;
 
+          if (currentTile.Type == TileType.Building)
+          {
+            obj.transform.Rotate(Vector3.forward * 90 * RandomNumberGenerator.GetRNG().Next(0, 3));
+          }
+
           switch (currentTile.Type)
           {
             case TileType.Road:
@@ -97,7 +102,7 @@ public class GameBoardBehaviour : MonoBehaviour
               #endregion
               #region Road Allignement
 
-              Debug.LogWarning("Road (" + i + ", " + j + ") = " + currentTile.Neighbours.Count(n => n.Value.Type == TileType.Road));
+              //Debug.LogWarning("Road (" + i + ", " + j + ") = " + currentTile.Neighbours.Count(n => n.Value.Type == TileType.Road));
 
               if (currentTile.Neighbours.Count(n => n.Value.Type == TileType.Road) > 2)
               {
