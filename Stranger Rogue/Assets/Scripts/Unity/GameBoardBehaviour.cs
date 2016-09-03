@@ -54,6 +54,8 @@ public class GameBoardBehaviour : MonoBehaviour
         {
           var obj = Instantiate(TileList.Where(t => t.Type == currentTile.Type).ToList().GetRandomObject());
 
+          var currentBehaviour = obj.GetComponent<BoardTileBehaviour>();
+
           var x = xOffset + i * TileWidth;
           var y = yOffset - j * TileWidth;
 
@@ -63,7 +65,9 @@ public class GameBoardBehaviour : MonoBehaviour
 
           if (currentTile.Type == TileType.Building)
           {
-            obj.transform.Rotate(Vector3.forward * 90 * RandomNumberGenerator.GetRNG().Next(0, 3));
+            var rotation = Vector3.forward * 90 * RandomNumberGenerator.GetRNG().Next(0, 3);
+            obj.transform.Rotate(rotation);
+            currentBehaviour.Canvas.transform.Rotate(-rotation);
           }
 
           switch (currentTile.Type)
@@ -125,6 +129,7 @@ public class GameBoardBehaviour : MonoBehaviour
               else if ((currentTile.IsNeighbourHasType(NeighbourOccupancy.Left, TileType.Road)) && (currentTile.IsNeighbourHasType(NeighbourOccupancy.Left, TileType.Road)))
               {
                 obj.transform.Rotate(Vector3.forward * 90);
+                currentBehaviour.Canvas.transform.Rotate(-Vector3.forward * 90);
               }
               #endregion
               break;
