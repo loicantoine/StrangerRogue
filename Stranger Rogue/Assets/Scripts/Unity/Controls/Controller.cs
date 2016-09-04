@@ -7,8 +7,12 @@ using UnityEngine;
 public class Controller : MonoBehaviour
 {
   public Camera CameraToControl;
+  public Transform GameBoard;
+
   public float CameraSpeed;
   public float CameraZoomSpeed;
+
+  public float CameraPanSpeed;
 
   private Vector3 m_LastMousePosition;
 
@@ -19,20 +23,20 @@ public class Controller : MonoBehaviour
   {
     if (Input.GetAxis("Horizontal") > 0)
     {
-      CameraToControl.transform.position += Vector3.right * CameraSpeed * Time.deltaTime;
+      GameBoard.position += Vector3.left * CameraSpeed * Time.deltaTime;
     }
     else if (Input.GetAxis("Horizontal") < 0)
     {
-      CameraToControl.transform.position += Vector3.left * CameraSpeed * Time.deltaTime;
+      GameBoard.position += Vector3.right * CameraSpeed * Time.deltaTime;
     }
 
     if (Input.GetAxis("Vertical") > 0)
     {
-      CameraToControl.transform.position += Vector3.up * CameraSpeed * Time.deltaTime;
+      GameBoard.position += Vector3.down * CameraSpeed * Time.deltaTime;
     }
     else if (Input.GetAxis("Vertical") < 0)
     {
-      CameraToControl.transform.position += Vector3.down * CameraSpeed * Time.deltaTime;
+      GameBoard.position += Vector3.up * CameraSpeed * Time.deltaTime;
     }
 
     if (Input.GetAxis("Mouse ScrollWheel") > 0)
@@ -50,17 +54,29 @@ public class Controller : MonoBehaviour
       }
     }
 
+
+    if (Input.GetKeyDown(KeyCode.Mouse0))
+    {
+      m_LastMousePosition = GetMouseHitPoint();
+    }
+
     if (Input.GetKey(KeyCode.Mouse0))
     {
-      if (m_LastMousePosition != Vector3.zero)
+      var currentMousePosition = GetMouseHitPoint();
+      if (m_LastMousePosition != Vector3.zero && currentMousePosition != Vector3.zero)
       {
-        CameraToControl.transform.position += m_LastMousePosition - Input.mousePosition;
+        GameBoard.position += -(m_LastMousePosition - currentMousePosition);
       }
-      m_LastMousePosition = Input.mousePosition;
+
+      m_LastMousePosition = currentMousePosition;
     }
-    else
-    {
-      m_LastMousePosition = Vector3.zero;
-    }
+  }
+  private Vector3 VectorBuffer;
+  private Vector3 GetMouseHitPoint()
+  {
+    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+    var raycasthit = Physics2D.Raycast(ray.origin, ray.direction);
+    VectorBuffer.Set(raycasthit.point.x, raycasthit.point.y, 0);
+    return VectorBuffer;
   }
 }
