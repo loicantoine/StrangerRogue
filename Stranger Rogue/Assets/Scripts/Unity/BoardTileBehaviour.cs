@@ -7,10 +7,6 @@ using UnityEngine.UI;
 
 public class BoardTileBehaviour : PoolableObject
 {
-  private int m_FoodAvailableResource;
-  private int m_ScienceAvailableResource;
-  private int m_IndustryAvailableResource;
-
   public BoardTile Tile;
 
   public Sprite Sprite;
@@ -21,39 +17,14 @@ public class BoardTileBehaviour : PoolableObject
   public float ChanceOfSpriteAppearing;
 
   public bool IsResourceAvailable;
+  
+  public ResourcePanel ResourcePanel;
 
-  public GameObject Canvas;
-
-  public Button ButtonOverlay;
-
-  public Image FoodIcon;
-  public Text FoodNumberText;
-  public Image ScienceIcon;
-  public Text ScienceNumberText;
-  public Image IndustryIcon;
-  public Text IndustryNumberText;
-
-  void Start()
+  void Awake()
   {
-    Tile = new BoardTile() { Type = Type };
-    if (IsResourceAvailable)
-    {
-      m_FoodAvailableResource = RandomNumberGenerator.GetRNG().Next(0, GameMaster.Singleton.MaxFoodPerTile);
-      m_ScienceAvailableResource = RandomNumberGenerator.GetRNG().Next(0, GameMaster.Singleton.MaxSciencePerTile);
-      m_IndustryAvailableResource = RandomNumberGenerator.GetRNG().Next(0, GameMaster.Singleton.MaxIndustryPerTile);
-      
-      FoodNumberText.text = m_FoodAvailableResource.ToString();
-      
-      ScienceNumberText.text = m_ScienceAvailableResource.ToString();
-      
-      IndustryNumberText.text = m_IndustryAvailableResource.ToString();
-    }
-    else
-    {
-      FoodIcon.gameObject.SetActive(false);
-      ScienceIcon.gameObject.SetActive(false);
-      IndustryIcon.gameObject.SetActive(false);
-    }
+    Tile = new BoardTile(Type, RandomNumberGenerator.GetRNG().Next(0, GameMaster.Singleton.MaxFoodPerTile),
+                               RandomNumberGenerator.GetRNG().Next(0, GameMaster.Singleton.MaxFoodPerTile),
+                               RandomNumberGenerator.GetRNG().Next(0, GameMaster.Singleton.MaxIndustryPerTile));
   }
 
   public void OnEnable()
@@ -64,9 +35,31 @@ public class BoardTileBehaviour : PoolableObject
     }
   }
 
+  public void UpdateResourcePanel()
+  {
+    if (ResourcePanel != null)
+    {
+      if (IsResourceAvailable)
+      {
+        ResourcePanel.FoodNumberText.text = Tile.FoodAvailableResource.ToString();
+        ResourcePanel.ScienceNumberText.text = Tile.ScienceAvailableResource.ToString();
+        ResourcePanel.IndustryNumberText.text = Tile.IndustryAvailableResource.ToString();
+        ResourcePanel.FoodIcon.gameObject.SetActive(true);
+        ResourcePanel.ScienceIcon.gameObject.SetActive(true);
+        ResourcePanel.IndustryIcon.gameObject.SetActive(true);
+      }
+      else
+      {
+        ResourcePanel.FoodIcon.gameObject.SetActive(false);
+        ResourcePanel.ScienceIcon.gameObject.SetActive(false);
+        ResourcePanel.IndustryIcon.gameObject.SetActive(false);
+      }
+    }
+  }
+
   public void SetOverlayActive(bool isActive)
   {
-    ButtonOverlay.gameObject.SetActive(isActive);
+    ResourcePanel.gameObject.SetActive(isActive);
   }
 
 }

@@ -37,7 +37,7 @@ public static class GameBoardFactory
     {
       for (int j = 0; j < length; j++)
       {
-        var newTile = new BoardTileNeighbouring(new BoardTile() { Type = abstractBoard[i, j] });
+        var newTile = new BoardTileNeighbouring(new BoardTile(abstractBoard[i, j]));
         if (i != 0)
         {
           newTile.Add(board[i - 1, j], NeighbourOccupancy.Left);

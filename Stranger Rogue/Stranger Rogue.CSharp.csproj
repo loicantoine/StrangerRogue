@@ -76,6 +76,7 @@
     <Compile Include="Assets\Scripts\Unity\Controls\Controller.cs" />
     <Compile Include="Assets\Scripts\Unity\GameBoardBehaviour.cs" />
     <Compile Include="Assets\Scripts\Unity\GameMaster.cs" />
+    <Compile Include="Assets\Scripts\Unity\ResourcePanel.cs" />
     <Compile Include="Assets\Scripts\Unity\Tools\PoolManager.cs" />
     <Compile Include="Assets\Scripts\Unity\Tools\PoolableObject.cs" />
     <Compile Include="Assets\Scripts\Unity\Tools\RandomNumberGenerator.cs" />

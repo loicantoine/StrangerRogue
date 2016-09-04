@@ -21,6 +21,10 @@ public class GameBoardBehaviour : MonoBehaviour
 
   public BoardTileBehaviour CrossRoad;
 
+  public RectTransform Canvas;
+
+  public ResourcePanel TileUIPanelPrefab;
+
   [Range(0,1)]
   public float GrassPourcentage;
 
@@ -30,16 +34,14 @@ public class GameBoardBehaviour : MonoBehaviour
 
     m_BoardModel = new GameBoard(GameBoardWidth, GameBoardLength);
 
-    //foreach (var tile in TileList)
-    //{
-    //  PoolManager.Singleton.CreatePool(tile, GameBoardWidth * GameBoardLength);
-    //}
-
-    //PoolManager.Singleton.CreatePool(ExteriorWall, (GameBoardWidth * (GameBoardLength + 1)) + ((GameBoardWidth + 1) * GameBoardLength));
-    //PoolManager.Singleton.CreatePool(InteriorWall, (GameBoardWidth * (GameBoardLength + 1)) + ((GameBoardWidth + 1) * GameBoardLength));
-
     var xOffset = -(((GameBoardWidth - 1) * TileWidth) / 2);
     var yOffset = (((GameBoardLength - 1) * TileWidth) / 2);
+
+    Canvas.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, (((GameBoardWidth) * TileWidth)));
+    Canvas.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, (((GameBoardLength) * TileWidth)));
+
+    var collider = GetComponent<BoxCollider2D>();
+    collider.size = Vector2.right * (((GameBoardWidth) * TileWidth)) + Vector2.up * (((GameBoardLength) * TileWidth));
 
     for (int i = 0; i < GameBoardWidth; i++)
     {
@@ -53,23 +55,12 @@ public class GameBoardBehaviour : MonoBehaviour
         .Type))
         {
           var obj = Instantiate(TileList.Where(t => t.Type == currentTile.Type).ToList().GetRandomObject());
-
-          var currentBehaviour = obj.GetComponent<BoardTileBehaviour>();
-
+          
           var x = xOffset + i * TileWidth;
           var y = yOffset - j * TileWidth;
-
           obj.transform.position = new Vector3(x, y);
-
-          obj.transform.parent = transform;
-
-          if (currentTile.Type == TileType.Building)
-          {
-            var rotation = Vector3.forward * 90 * RandomNumberGenerator.GetRNG().Next(0, 3);
-            obj.transform.Rotate(rotation);
-            currentBehaviour.Canvas.transform.Rotate(-rotation);
-          }
-
+          
+          
           switch (currentTile.Type)
           {
             case TileType.Road:
@@ -129,7 +120,7 @@ public class GameBoardBehaviour : MonoBehaviour
               else if ((currentTile.IsNeighbourHasType(NeighbourOccupancy.Left, TileType.Road)) && (currentTile.IsNeighbourHasType(NeighbourOccupancy.Left, TileType.Road)))
               {
                 obj.transform.Rotate(Vector3.forward * 90);
-                currentBehaviour.Canvas.transform.Rotate(-Vector3.forward * 90);
+               // currentBehaviour.Canvas.transform.Rotate(-Vector3.forward * 90);
               }
               #endregion
               break;
@@ -195,6 +186,11 @@ public class GameBoardBehaviour : MonoBehaviour
                 wall.transform.parent = transform;
               }
               #endregion
+              #region Random Rotation
+              var rotation = Vector3.forward * 90 * RandomNumberGenerator.GetRNG().Next(0, 3);
+              obj.transform.Rotate(rotation);
+              //currentBehaviour.Canvas.transform.Rotate(-rotation);
+              #endregion
               break;
             case TileType.Grass:
               #region Wall
@@ -233,6 +229,21 @@ public class GameBoardBehaviour : MonoBehaviour
               Debug.LogWarning("The type " + currentTile.Type + " has no behaviour defined");
               break;
           }
+
+          var ui = Instantiate(TileUIPanelPrefab);
+
+          ui.transform.SetParent(Canvas, false);
+
+          var rectTransform = ui.GetComponent<RectTransform>();
+
+          rectTransform.anchorMin = Vector2.one * 0.5f;
+          rectTransform.anchorMax = Vector2.one * 0.5f;
+          rectTransform.anchoredPosition = Vector2.right * x + Vector2.up * y;
+          ui.name += " (" + currentTile.Type + ")" + "(" + i + ", " + j + ")" + " (" + obj.name + ")";
+
+          obj.ResourcePanel = ui;
+          obj.transform.parent = transform;
+          obj.UpdateResourcePanel();
         }
       }
     }

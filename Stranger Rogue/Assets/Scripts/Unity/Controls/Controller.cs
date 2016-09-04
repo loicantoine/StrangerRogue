@@ -71,6 +71,7 @@ public class Controller : MonoBehaviour
       m_LastMousePosition = currentMousePosition;
     }
   }
+
   private Vector3 VectorBuffer;
   private Vector3 GetMouseHitPoint()
   {
