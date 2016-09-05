@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class BoardTileBehaviour : PoolableObject
 {
+  private bool IsTileCaptured;
+
   public BoardTile Tile;
 
   public Sprite Sprite;
@@ -19,6 +21,8 @@ public class BoardTileBehaviour : PoolableObject
   public bool IsResourceAvailable;
   
   public ResourcePanel ResourcePanel;
+
+  public Button OverlayButton;
 
   void Awake()
   {
@@ -39,6 +43,7 @@ public class BoardTileBehaviour : PoolableObject
   {
     if (ResourcePanel != null)
     {
+      ResourcePanel.BoardTileBehaviour = this;
       if (IsResourceAvailable)
       {
         ResourcePanel.FoodNumberText.text = Tile.FoodAvailableResource.ToString();
@@ -61,5 +66,18 @@ public class BoardTileBehaviour : PoolableObject
   {
     ResourcePanel.gameObject.SetActive(isActive);
   }
+
+  public void CaptureTile()
+  {
+    if (!IsTileCaptured)
+    {
+      if (ResourcePanel != null)
+      {
+        ResourcePanel.CapturedObject.SetActive(true);
+        IsTileCaptured = true;
+      }
+    }
+  }
+
 
 }

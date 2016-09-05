@@ -3,6 +3,12 @@
 public class GameMaster : MonoBehaviour
 {
   private static GameMaster m_Instance;
+  private GameBoardPosition m_PositionOnBoard;
+
+  public int MaxFoodPerTile;
+  public int MaxSciencePerTile;
+  public int MaxIndustryPerTile;
+  public GameBoardBehaviour GameBoard;
 
   public static GameMaster Singleton
   {
@@ -16,8 +22,15 @@ public class GameMaster : MonoBehaviour
     }
   }
 
-  public int MaxFoodPerTile;
-  public int MaxSciencePerTile;
-  public int MaxIndustryPerTile;
+  void Start()
+  {
+    
+  }
+
 }
 
+public struct GameBoardPosition
+{
+  public int x;
+  public int y;
+}
