@@ -55,12 +55,12 @@ public class Controller : MonoBehaviour
     }
 
 
-    if (Input.GetKeyDown(KeyCode.Mouse0))
+    if (Input.GetKeyDown(KeyCode.Mouse1))
     {
       m_LastMousePosition = GetMouseHitPoint();
     }
 
-    if (Input.GetKey(KeyCode.Mouse0))
+    if (Input.GetKey(KeyCode.Mouse1))
     {
       var currentMousePosition = GetMouseHitPoint();
       if (m_LastMousePosition != Vector3.zero && currentMousePosition != Vector3.zero)
